@@ -22,24 +22,26 @@
    sudo make install
    ```
 
-3. MyOS文件夹
+3. 可挂载目录/mnt/floppy
+
+  ```shell
+  sudo mkdir -p /mnt/floppy
+  ```
+
+4. MyOS文件夹
 
 # 执行步骤
 1. 进入MyOS文件夹
 
-2. 将.asm汇编成二进制文件
+2. 执行Makefile的命令
   
   ```shell
-  nasm boot.asm -o boot.bin
+  make
   ```
-  
-3. 将二进制文件载入到虚拟软盘
-  
-  ```shell
-  dd if=boot.bin of=myos.img bs=512 count=1 conv=notrunc
-  ```
-  
-4. 执行bochsrc
+
+会执行：nasm二进制文件、将引导区boot写入软盘myos.img、将主程序以文件格式写入软盘myos.img
+
+3. 执行bochsrc
 
   ```shell
   bochs -f bochsrc
