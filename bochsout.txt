@@ -31,7 +31,7 @@
 00000000000i[      ]   Sound support: no
 00000000000i[      ]   USB support: no
 00000000000i[      ]   VGA extension support: vbe
-00000000000i[MEM0  ] allocated memory at 0x7f0948dfd010. after alignment, vector=0x7f0948dfe000
+00000000000i[MEM0  ] allocated memory at 0x7f7f34c5f010. after alignment, vector=0x7f7f34c60000
 00000000000i[MEM0  ] 16.00MB
 00000000000i[MEM0  ] mem block size = 0x00020000, blocks=128
 00000000000i[MEM0  ] rom at 0xfffe0000/131072 ('/usr/local/share/bochs/BIOS-bochs-latest')
@@ -41,7 +41,7 @@
 00000000000i[DEV   ] PIIX3 PCI-to-ISA bridge present at device 1, function 0
 00000000000i[PLUGIN] init_dev of 'cmos' plugin device by virtual method
 00000000000i[CMOS  ] Using local time for initial clock
-00000000000i[CMOS  ] Setting initial clock to: Wed Feb 24 19:17:56 2021 (time0=1614223076)
+00000000000i[CMOS  ] Setting initial clock to: Thu Feb 25 05:06:26 2021 (time0=1614258386)
 00000000000i[PLUGIN] init_dev of 'dma' plugin device by virtual method
 00000000000i[DMA   ] channel 4 used by cascade
 00000000000i[PLUGIN] init_dev of 'pic' plugin device by virtual method
@@ -54,10 +54,13 @@
 00000000000i[BXVGA ] VBE Bochs Display Extension Enabled
 00000000000i[XGUI  ] test_alloc_colors: 16 colors available out of 16 colors tried
 00000000000i[XGUI  ] font 8 wide x 16 high, display depth = 24
+00000000000i[KEYMAP] Loading keymap from '/usr/local/share/bochs/keymaps/x11-pc-us.map'
+00000000000i[KEYMAP] Loaded 168 symbols
 00000000000i[MEM0  ] rom at 0xc0000/41984 ('/usr/local/share/bochs/VGABIOS-lgpl-latest')
 00000000000i[PLUGIN] init_dev of 'floppy' plugin device by virtual method
 00000000000i[DMA   ] channel 2 used by Floppy Drive
-00000000000i[FLOPPY] fd0: 'myos.img' ro=0, h=2,t=80,spt=18
+00000000000i[FLOPPY] fd0: 'freedos.img' ro=0, h=2,t=80,spt=18
+00000000000i[FLOPPY] fd1: 'myos.img' ro=0, h=2,t=80,spt=18
 00000000000i[FLOPPY] Using boot sequence floppy, none, none
 00000000000i[FLOPPY] Floppy boot signature check is enabled
 00000000000i[PLUGIN] init_dev of 'acpi' plugin device by virtual method
@@ -174,7 +177,7 @@
 00000322255i[BIOS  ] ram_end=16MB
 00000362779i[BIOS  ] Found 1 cpu(s)
 00000376431i[BIOS  ] bios_table_addr: 0x000f9db8 end=0x000fcc00
-00000601024i[XGUI  ] charmap update. Font is 9 x 16
+00000609816i[XGUI  ] charmap update. Font is 9 x 16
 00000704252i[PCI   ] i440FX PMC write to PAM register 59 (TLB Flush)
 00001032182i[P2ISA ] PCI IRQ routing: PIRQA# set to 0x0b
 00001032201i[P2ISA ] PCI IRQ routing: PIRQB# set to 0x09
@@ -206,26 +209,28 @@
 00001548564i[BXVGA ] VBE known Display Interface b0c0
 00001548596i[BXVGA ] VBE known Display Interface b0c5
 00001551239i[VBIOS ] VBE Bios $Id: vbe.c 228 2020-01-02 23:09:02Z vruppert $
-00004349416i[XGUI  ] charmap update. Font is 9 x 16
-00014040184i[BIOS  ] Booting from 0000:7c00
-00468932000p[XGUI  ] >>PANIC<< POWER button turned off.
-00468932000i[CPU0  ] CPU is in real mode (active)
-00468932000i[CPU0  ] CS.mode = 16 bit
-00468932000i[CPU0  ] SS.mode = 16 bit
-00468932000i[CPU0  ] EFER   = 0x00000000
-00468932000i[CPU0  ] | EAX=00001301  EBX=0000000c  ECX=00090010  EDX=00000000
-00468932000i[CPU0  ] | ESP=0000ffd6  EBP=00007c1e  ESI=000e0000  EDI=0000ffac
-00468932000i[CPU0  ] | IOPL=0 id vip vif ac vm rf nt of df if tf SF zf af pf cf
-00468932000i[CPU0  ] | SEG sltr(index|ti|rpl)     base    limit G D
-00468932000i[CPU0  ] |  CS:0000( 0004| 0|  0) 00000000 0000ffff 0 0
-00468932000i[CPU0  ] |  DS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-00468932000i[CPU0  ] |  SS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-00468932000i[CPU0  ] |  ES:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-00468932000i[CPU0  ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-00468932000i[CPU0  ] |  GS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-00468932000i[CPU0  ] | EIP=00007c09 (00007c09)
-00468932000i[CPU0  ] | CR0=0x60000010 CR2=0x00000000
-00468932000i[CPU0  ] | CR3=0x00000000 CR4=0x00000000
-00468932000i[CMOS  ] Last time is 1614223193 (Wed Feb 24 19:19:53 2021)
-00468932000i[XGUI  ] Exit
-00468932000i[SIM   ] quit_sim called with exit code 1
+00003945172i[XGUI  ] charmap update. Font is 9 x 16
+00014040185i[BIOS  ] Booting from 0000:7c00
+00021628175i[BIOS  ] int13_harddisk: function 00, unmapped device for ELDL=80
+00021632342i[BIOS  ] int13_harddisk: function 08, unmapped device for ELDL=80
+01194808000p[XGUI  ] >>PANIC<< POWER button turned off.
+01194808000i[CPU0  ] CPU is in protected mode (active)
+01194808000i[CPU0  ] CS.mode = 32 bit
+01194808000i[CPU0  ] SS.mode = 16 bit
+01194808000i[CPU0  ] EFER   = 0x00000000
+01194808000i[CPU0  ] | EAX=60000c50  EBX=00000000  ECX=00090000  EDX=00000000
+01194808000i[CPU0  ] | ESP=00000100  EBP=00000000  ESI=000e0000  EDI=0000077e
+01194808000i[CPU0  ] | IOPL=0 id vip vif ac vm rf nt of df if tf sf zf af PF cf
+01194808000i[CPU0  ] | SEG sltr(index|ti|rpl)     base    limit G D
+01194808000i[CPU0  ] |  CS:0008( 0001| 0|  0) 000323c0 00000014 0 1
+01194808000i[CPU0  ] |  DS:3224( 0005| 0|  0) 00032240 0000ffff 0 0
+01194808000i[CPU0  ] |  SS:3224( 0005| 0|  0) 00032240 0000ffff 0 0
+01194808000i[CPU0  ] |  ES:3224( 0005| 0|  0) 00032240 0000ffff 0 0
+01194808000i[CPU0  ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
+01194808000i[CPU0  ] |  GS:0010( 0002| 0|  0) 000b8000 0000ffff 0 0
+01194808000i[CPU0  ] | EIP=00000013 (00000013)
+01194808000i[CPU0  ] | CR0=0x60000011 CR2=0x00000000
+01194808000i[CPU0  ] | CR3=0x00000000 CR4=0x00000000
+01194808000i[CMOS  ] Last time is 1614258684 (Thu Feb 25 05:11:24 2021)
+01194808000i[XGUI  ] Exit
+01194808000i[SIM   ] quit_sim called with exit code 1

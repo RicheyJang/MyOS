@@ -3,12 +3,13 @@ megs:16
 romimage:file=$BXSHARE/BIOS-bochs-latest
 vgaromimage:file=$BXSHARE/VGABIOS-lgpl-latest
 
-floppya:1_44=myos.img, status=inserted
+floppya: 1_44=freedos.img, status=inserted
+floppyb: 1_44=myos.img, status=inserted
 
-boot:floppy
+boot:a
 
 log:bochsout.txt
 
 mouse:enabled=0
 
-#keyboard: keymap=$BXSHARE/keymaps/x11-pc-us.map
+keyboard: keymap=$BXSHARE/keymaps/x11-pc-us.map
