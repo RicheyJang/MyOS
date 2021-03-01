@@ -1,4 +1,4 @@
-# »·¾³
+# ç¯å¢ƒ
 1. bochs
 
    ```shell
@@ -22,26 +22,26 @@
    sudo make install
    ```
 
-3. ¿É¹ÒÔØÄ¿Â¼/mnt/floppy
+3. å¯æŒ‚è½½ç›®å½•/mnt/floppy
 
   ```shell
   sudo mkdir -p /mnt/floppy
   ```
 
-4. MyOSÎÄ¼ş¼Ğ
+4. MyOSæ–‡ä»¶å¤¹
 
-# Ö´ĞĞ²½Öè
-1. ½øÈëMyOSÎÄ¼ş¼Ğ
+# æ‰§è¡Œæ­¥éª¤
+1. è¿›å…¥MyOSæ–‡ä»¶å¤¹
 
-2. Ö´ĞĞMakefileµÄÃüÁî
+2. æ‰§è¡ŒMakefileçš„å‘½ä»¤
   
   ```shell
   make
   ```
 
-»áÖ´ĞĞ£ºnasm¶ş½øÖÆÎÄ¼ş¡¢½«Òıµ¼ÇøbootĞ´ÈëÈíÅÌmyos.img¡¢½«Ö÷³ÌĞòÒÔÎÄ¼ş¸ñÊ½Ğ´ÈëÈíÅÌmyos.img
+ä¼šæ‰§è¡Œï¼šnasmäºŒè¿›åˆ¶æ–‡ä»¶ã€å°†å¼•å¯¼åŒºbootå†™å…¥è½¯ç›˜myos.imgã€å°†ä¸»ç¨‹åºä»¥æ–‡ä»¶æ ¼å¼å†™å…¥è½¯ç›˜myos.img
 
-3. Ö´ĞĞbochsrc
+3. æ‰§è¡Œbochsrc
 
   ```shell
   bochs -f bochsrc
