@@ -66,6 +66,8 @@ _PageTableNumber		dd	0
 
 _MemChkBuf:	times	256	db	0
 
+_currentTask:		dd		0
+
 ; 保护模式下使用这些符号
 szMemChkTitle		equ	_szMemChkTitle	- $$
 szRAMSize		equ	_szRAMSize	- $$
@@ -81,6 +83,7 @@ ARDStruct		equ	_ARDStruct	- $$
 	dwType		equ	_dwType		- $$
 MemChkBuf		equ	_MemChkBuf	- $$
 PageTableNumber		equ	_PageTableNumber- $$
+currentTask		equ	_currentTask - $$
 
 DataLen			equ	$ - LABEL_DATA
 ; END of [SECTION .data1]
@@ -173,7 +176,7 @@ LABEL_TSS0:
         DD  TopOfUserStack0; ESP
         DD  0           ; EBP
         DD  0           ; ESI
-        DD  0           ; EDI
+        DD  0      ; EDI     
         DD  0           ; ES
         DD	SelectorLDT0Code		; CS
 		DD	SelectorLDT0UserStack	; SS
@@ -387,7 +390,6 @@ LABEL_SEG_CODE32:
 	mov	esp, TopOfStack0
 	
 	call	Init8259A	; 启动外部中断
-	;int 80h
 	
 	push	szMemChkTitle;显示内存信息标题
 	call	DispStr
@@ -396,16 +398,14 @@ LABEL_SEG_CODE32:
 	
 	call	SetupPaging		; 启动页表0和1
 	
-	jmp SelectorTSS1:0
-	jmp SelectorLDT0Code:0
+	;sti
+	;call SelectorTSS1:0
+	jmp SelectorLDT0Code:0	;进入task0
 
 	jmp $
 
 ; Task0
 LABEL_TASK0:
-	mov	ax, SelectorLDT0
-	lldt	ax
-
 	mov	ax, SelectorVideo
 	mov	gs, ax			; 视频段选择子(目的)
 
@@ -414,16 +414,15 @@ LABEL_TASK0:
 	mov	al, 'A'
 	mov	[gs:edi], ax
 
-	jmp SelectorTSS1:0
-	jmp SelectorLDT0Code:0
+	;call SelectorTSS1:0
+	sti
+	jmp LABEL_TASK0
+	;iret
 	
 LEN_TASK0 equ $-LABEL_TASK0
 
 ; Task1
 LABEL_TASK1:
-	mov	ax, SelectorLDT1
-	lldt	ax
-
 	mov	ax, SelectorVideo
 	mov	gs, ax			; 视频段选择子(目的)
 
@@ -432,17 +431,36 @@ LABEL_TASK1:
 	mov	al, 'B'
 	mov	[gs:edi], ax
 
-	jmp SelectorTSS0:0
-	jmp SelectorLDT1Code:0
+	;call SelectorTSS0:0
+	sti
+	jmp LABEL_TASK1
 	
 LEN_TASK1 equ $-LABEL_TASK1
 
 ; 中断处理程序 ---------------------------------------------------------------
 _ClockHandler:		; int 20h 由8259A-IRQ0产生
 ClockHandler	equ	_ClockHandler - $$
-	inc	byte [gs:((80 * 0 + 70) * 2)]	; 屏幕第 0 行, 第 70 列。
+	mov	ax, SelectorData
+	mov	es, ax 
+	mov eax, [es:currentTask]
+	cmp eax,0
+	je	short IFEQZERO
+IFEQONE:
+	mov eax,0
+	mov dword [es:currentTask],eax
 	mov	al, 20h
 	out	20h, al				; 发送 EOI
+	call io_delay
+	jmp SelectorTSS0:0
+	jmp short IFFINISH
+IFEQZERO:
+	mov eax,1
+	mov dword [es:currentTask],eax
+	mov	al, 20h
+	out	20h, al				; 发送 EOI
+	call io_delay
+	jmp SelectorTSS1:0
+IFFINISH:
 	iretd
 
 _UserIntHandler:	; int 80h
