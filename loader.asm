@@ -97,11 +97,11 @@ LABEL_IDT:
 %rep 32
 			Gate	SelectorCode32, SpuriousHandler,      0, DA_386IGate
 %endrep
-.020h:		Gate	SelectorCode32,    ClockHandler,      0, DA_386IGate+DA_DPL3
+.020h:		Gate	SelectorCode32,    ClockHandler,      0, DA_386IGate
 %rep 95
 			Gate	SelectorCode32, SpuriousHandler,      0, DA_386IGate
 %endrep
-.080h:		Gate	SelectorCode32,  UserIntHandler,      0, DA_386IGate
+.080h:		Gate	SelectorCode32,  UserIntHandler,      0, DA_386IGate+DA_DPL3
 
 IdtLen		equ	$ - LABEL_IDT
 IdtPtr		dw	IdtLen - 1	; 段界限
@@ -418,7 +418,7 @@ LABEL_TASK0:
 	mov	al, 'A'
 	mov	[gs:edi], ax
 
-	int 20h
+	int 80h
 	jmp LABEL_TASK0
 	
 LEN_TASK0 equ $-LABEL_TASK0
@@ -433,7 +433,7 @@ LABEL_TASK1:
 	mov	al, 'B'
 	mov	[gs:edi], ax
 
-	int 20h
+	int 80h
 	jmp LABEL_TASK1
 	
 LEN_TASK1 equ $-LABEL_TASK1
@@ -466,9 +466,7 @@ IFFINISH:
 
 _UserIntHandler:	; int 80h
 UserIntHandler	equ	_UserIntHandler - $$
-	mov	ah, 0Ch				; 0000: 黑底    1100: 红字
-	mov	al, 'I'
-	mov	[gs:((80 * 0 + 70) * 2)], ax	; 屏幕第 0 行, 第 70 列。
+	int 20h
 	iretd
 
 _SpuriousHandler:	; int 其它
