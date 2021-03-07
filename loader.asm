@@ -97,7 +97,7 @@ LABEL_IDT:
 %rep 32
 			Gate	SelectorCode32, SpuriousHandler,      0, DA_386IGate
 %endrep
-.020h:		Gate	SelectorCode32,    ClockHandler,      0, DA_386IGate
+.020h:		Gate	SelectorCode32,    ClockHandler,      0, DA_386IGate+DA_DPL3
 %rep 95
 			Gate	SelectorCode32, SpuriousHandler,      0, DA_386IGate
 %endrep
@@ -131,13 +131,13 @@ TopOfStack1	equ	$ - LABEL_STACK1 - 1
 ALIGN	32
 LABEL_LDT0:
 ;                            段基址       段界限      属性
-LABEL_LDT0_DESC_CODE:	Descriptor 0, LEN_TASK0 - 1, DA_C + DA_32 ; Task0 Code, 32 位, ring 3
-LABEL_LDT0_DESC_USER_STACK:	Descriptor 0,      TopOfUserStack0, DA_DRWA+DA_32
+LABEL_LDT0_DESC_CODE:	Descriptor 0, LEN_TASK0 - 1, DA_C + DA_32 + DA_DPL3 ; Task0 Code, 32 位, ring 3
+LABEL_LDT0_DESC_USER_STACK:	Descriptor 0,      TopOfUserStack0, DA_DRWA + DA_32 + DA_DPL3
 LDT0Len		equ	$ - LABEL_LDT0
 
 ; LDT 选择子
-SelectorLDT0Code	equ	LABEL_LDT0_DESC_CODE	- LABEL_LDT0 + SA_TIL
-SelectorLDT0UserStack		equ	LABEL_LDT0_DESC_USER_STACK	- LABEL_LDT0+ SA_TIL
+SelectorLDT0Code	equ	LABEL_LDT0_DESC_CODE	- LABEL_LDT0 + SA_TIL + SA_RPL3
+SelectorLDT0UserStack		equ	LABEL_LDT0_DESC_USER_STACK	- LABEL_LDT0+ SA_TIL + SA_RPL3
 ; END of [SECTION .ldt0]
 
 ; LDT1 --------------------------------------------------------------------------------------
@@ -145,13 +145,13 @@ SelectorLDT0UserStack		equ	LABEL_LDT0_DESC_USER_STACK	- LABEL_LDT0+ SA_TIL
 ALIGN	32
 LABEL_LDT1:
 ;                            段基址       段界限      属性
-LABEL_LDT1_DESC_CODE: Descriptor 0, LEN_TASK1 - 1, DA_C + DA_32; Task1 Code, 32 位
-LABEL_LDT1_DESC_USER_STACK:	Descriptor 0,      TopOfUserStack1, DA_DRWA+DA_32
+LABEL_LDT1_DESC_CODE: Descriptor 0, LEN_TASK1 - 1, DA_C + DA_32 + DA_DPL3; Task1 Code, 32 位
+LABEL_LDT1_DESC_USER_STACK:	Descriptor 0,      TopOfUserStack1, DA_DRWA+DA_32 + DA_DPL3
 LDT1Len		equ	$ - LABEL_LDT1
 
 ; LDT 选择子
-SelectorLDT1Code	equ	LABEL_LDT1_DESC_CODE	- LABEL_LDT1 + SA_TIL
-SelectorLDT1UserStack		equ	LABEL_LDT1_DESC_USER_STACK	- LABEL_LDT1 + SA_TIL
+SelectorLDT1Code	equ	LABEL_LDT1_DESC_CODE	- LABEL_LDT1 + SA_TIL + SA_RPL3
+SelectorLDT1UserStack		equ	LABEL_LDT1_DESC_USER_STACK	- LABEL_LDT1 + SA_TIL + SA_RPL3
 ; END of [SECTION .ldt1]
 
 ; TSS0 ---------------------------------------------------------------------------------------------
@@ -398,9 +398,13 @@ LABEL_SEG_CODE32:
 	
 	call	SetupPaging		; 启动页表0和1
 	
-	;sti
-	;call SelectorTSS1:0
-	jmp SelectorLDT0Code:0	;进入task0
+	;jmp SelectorLDT0Code:0	;进入task0
+	push	SelectorLDT0UserStack
+	push	TopOfUserStack0
+	push	SelectorLDT0Code
+	push	0
+	sti
+	retf
 
 	jmp $
 
@@ -414,10 +418,8 @@ LABEL_TASK0:
 	mov	al, 'A'
 	mov	[gs:edi], ax
 
-	;call SelectorTSS1:0
-	sti
+	int 20h
 	jmp LABEL_TASK0
-	;iret
 	
 LEN_TASK0 equ $-LABEL_TASK0
 
@@ -431,8 +433,7 @@ LABEL_TASK1:
 	mov	al, 'B'
 	mov	[gs:edi], ax
 
-	;call SelectorTSS0:0
-	sti
+	int 20h
 	jmp LABEL_TASK1
 	
 LEN_TASK1 equ $-LABEL_TASK1
