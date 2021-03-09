@@ -167,8 +167,8 @@ LABEL_TSS0:
         DD  0			; 2 级堆栈
         DD  0			; 
         DD  PageDirBase0; CR3
-        DD  0           ; EIP
-        DD  0           ; EFLAGS
+        DD  0        	; EIP
+        DD  200h        ; EFLAGS
         DD  0           ; EAX
         DD  0           ; ECX
         DD  0           ; EDX
@@ -204,7 +204,7 @@ LABEL_TSS1:
 		DD	0			; 
 		DD	PageDirBase1; CR3
 		DD	0			; EIP
-		DD	0			; EFLAGS
+		DD	200h		; EFLAGS
 		DD	0			; EAX
 		DD	0			; ECX
 		DD	0			; EDX
@@ -398,7 +398,7 @@ LABEL_SEG_CODE32:
 	
 	call	SetupPaging		; 启动页表0和1
 	
-	;jmp SelectorLDT0Code:0	;进入task0
+	;进入task0
 	push	SelectorLDT0UserStack
 	push	TopOfUserStack0
 	push	SelectorLDT0Code
@@ -466,7 +466,7 @@ IFFINISH:
 
 _UserIntHandler:	; int 80h
 UserIntHandler	equ	_UserIntHandler - $$
-	int 20h
+	sti
 	iretd
 
 _SpuriousHandler:	; int 其它
