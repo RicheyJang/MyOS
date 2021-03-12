@@ -52,6 +52,7 @@ LABEL_DATA:
 _szMemChkTitle:			db	"BaseAddrL BaseAddrH LengthLow LengthHigh   Type", 0Ah, 0	; 进入保护模式后显示此字符串
 _szRAMSize			db	"RAM size:", 0
 _szReturn			db	0Ah, 0
+_szMyself			db	"By JYQ. Result:",0
 ; 变量
 _dwMCRNumber:			dd	0	; Memory Check Result
 _dwDispPos:			dd	(80 * 6 + 0) * 2	; 屏幕第 6 行, 第 0 列。
@@ -72,6 +73,7 @@ _currentTask:		dd		0
 szMemChkTitle		equ	_szMemChkTitle	- $$
 szRAMSize		equ	_szRAMSize	- $$
 szReturn		equ	_szReturn	- $$
+szMyself		equ	_szMyself	- $$
 dwDispPos		equ	_dwDispPos	- $$
 dwMemSize		equ	_dwMemSize	- $$
 dwMCRNumber		equ	_dwMCRNumber	- $$
@@ -389,12 +391,17 @@ LABEL_SEG_CODE32:
 	mov	ss, ax			; 堆栈段选择子
 	mov	esp, TopOfStack0
 	
-	call	Init8259A	; 启动外部中断
+	call	Init8259A		; 启动外部中断
 	
-	push	szMemChkTitle;显示内存信息标题
+	push	szMemChkTitle		;显示内存信息标题
 	call	DispStr
 	add	esp, 4
 	call	DispMemSize		; 显示内存信息
+
+	call	DispReturn
+	push	szMyself		;显示个人信息
+	call	DispStr
+	add	esp, 4
 	
 	call	SetupPaging		; 启动页表0和1
 	
@@ -413,9 +420,9 @@ LABEL_TASK0:
 	mov	ax, SelectorVideo
 	mov	gs, ax			; 视频段选择子(目的)
 
-	mov	edi, (80 * 1 + 50) * 2	; 屏幕第 1 行, 第 50 列。
+	mov	edi, (80 * 15 + 20) * 2	; 屏幕第 15 行, 第 20 列
 	mov	ah, 0Ch			; 0000: 黑底    1100: 红字
-	mov	al, 'A'
+	mov	al, 'J'
 	mov	[gs:edi], ax
 
 	int 80h
@@ -428,9 +435,9 @@ LABEL_TASK1:
 	mov	ax, SelectorVideo
 	mov	gs, ax			; 视频段选择子(目的)
 
-	mov	edi, (80 * 1 + 50) * 2	; 屏幕第 1 行, 第 50 列。
+	mov	edi, (80 * 15 + 20) * 2	; 屏幕第 15 行, 第 20 列
 	mov	ah, 0Ch			; 0000: 黑底    1100: 红字
-	mov	al, 'B'
+	mov	al, 'R'
 	mov	[gs:edi], ax
 
 	int 80h
